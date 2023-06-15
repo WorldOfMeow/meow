@@ -11,15 +11,19 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.MessageToByteEncoder;
-import io.netty.util.internal.PlatformDependent;
 
+import java.net.ConnectException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Meow {
+    public final static Logger logger = Logger.getLogger("Meow");
+
     /**
      * A server-side class bound to a client which is connected to the server.
      * This class is expected be extended in order to store state information (eg. client ID) and add more functions.
@@ -383,18 +387,62 @@ public class Meow {
      * @param <D> the type of the data being transmitted
      */
     public static class Client<D> {
+        private String latestConnectionAddress;
+        private int latestConnectionPort;
+        private long latestConnectionTimeout = 3000;
+        private long reconnectFailTimeout = 3000;
+        private Thread reconnectThread;
+        private boolean autoReconnect = false;
         private final DataSerializer<D> serializer;
         private Bootstrap bootstrap;
         private EventLoopGroup workerGroup;
         private volatile ChannelHandlerContext context;
         private final AtomicBoolean initialized = new AtomicBoolean(false);
+        private final AtomicBoolean continueReconnect = new AtomicBoolean(true);
 
         private volatile Consumer<Bootstrap> onConfigured;
         private volatile Consumer<SocketChannel> onChannelInitialized;
         private volatile Runnable onConnected;
+        private volatile Consumer<AtomicBoolean> beforeReconnect;
         private volatile Consumer<D> onReceived;
         private volatile Runnable onDisconnected;
         private volatile Consumer<Throwable> onException = Throwable::printStackTrace;
+
+        private final Runnable reconnect = () -> {
+            if (continueReconnect.get() && autoReconnect) {
+                if (reconnectThread != null) {
+                    reconnectThread.interrupt();
+                }
+                reconnectThread = new Thread(() -> {
+                    while (autoReconnect) {
+                        if(continueReconnect.get()) {
+                            try {
+                                if (beforeReconnect != null) {
+                                    beforeReconnect.accept(continueReconnect);
+                                }
+                                connect(latestConnectionAddress, latestConnectionPort, latestConnectionTimeout);
+                                reconnectThread.interrupt();
+                                break;
+                            } catch (InterruptedException | IllegalStateException e) {
+                                logger.log(Level.WARNING, "Interrupted or already connected while reconnecting", e);
+                                break;
+                            } catch (Exception e) {
+                                logger.log(Level.WARNING, "Failed to reconnect", e);
+                                try {
+                                    Thread.sleep(reconnectFailTimeout);
+                                } catch (InterruptedException ex) {
+                                    logger.log(Level.WARNING, "Interrupted while waiting to reconnect", ex);
+                                    break;
+                                }
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                });
+                reconnectThread.start();
+            }
+        };
 
         /**
          * Create a new instance with the specified {@link DataSerializer}.
@@ -412,8 +460,9 @@ public class Meow {
          *
          * @param onConfigured the code to execute, can be null
          */
-        public void onConfigured(Consumer<Bootstrap> onConfigured) {
+        public Client<D> onConfigured(Consumer<Bootstrap> onConfigured) {
             this.onConfigured = onConfigured;
+            return this;
         }
 
         /**
@@ -421,8 +470,9 @@ public class Meow {
          *
          * @param onChannelInitialized the code to execute, can be null
          */
-        public void onChannelInitialized(Consumer<SocketChannel> onChannelInitialized) {
+        public Client<D> onChannelInitialized(Consumer<SocketChannel> onChannelInitialized) {
             this.onChannelInitialized = onChannelInitialized;
+            return this;
         }
 
         /**
@@ -431,8 +481,9 @@ public class Meow {
          *
          * @param onConnected the code to execute, can be null
          */
-        public void onConnected(Runnable onConnected) {
+        public Client<D> onConnected(Runnable onConnected) {
             this.onConnected = onConnected;
+            return this;
         }
 
         /**
@@ -440,17 +491,19 @@ public class Meow {
          *
          * @param onReceived the code to execute, can be null
          */
-        public void onReceived(Consumer<D> onReceived) {
+        public Client<D> onReceived(Consumer<D> onReceived) {
             this.onReceived = onReceived;
+            return this;
         }
 
         /**
          * Called when this client gets disconnected from the server.
-         *
+         * Also Triggered before the reconnection attempt.
          * @param onDisconnected the code to execute, can be null
          */
-        public void onDisconnected(Runnable onDisconnected) {
+        public Client<D> onDisconnected(Runnable onDisconnected) {
             this.onDisconnected = onDisconnected;
+            return this;
         }
 
         /**
@@ -458,15 +511,54 @@ public class Meow {
          *
          * @param onException the code to execute, can be null
          */
-        public void onException(Consumer<Throwable> onException) {
+        public Client<D> onException(Consumer<Throwable> onException) {
             this.onException = onException;
+            return this;
         }
 
+        /**
+         * Called before the reconnection attempt.
+         * @param beforeReconnect the code to execute, can be null
+         * {@link AtomicBoolean} can be set to false to cancel a reconnection attempt.
+         */
+        public Client<D> beforeReconnect(Consumer<AtomicBoolean> beforeReconnect) {
+            this.beforeReconnect = beforeReconnect;
+            return this;
+        }
 
+        /**
+         * Reconnection attempts will happen inside a new Thread.
+         * Enable or disable the automatic reconnection.
+         * @param autoReconnect true to enable, false to disable
+         */
+        public Client<D> setAutoReconnect(boolean autoReconnect) {
+            this.autoReconnect = autoReconnect;
+            return this;
+        }
+
+        /**
+         * Set the timeout for the connection in millis, or a non-positive value for no timeout.
+         */
+        public Client<D> setReconnectFailTimeout(long reconnectFailTimeout) {
+            this.reconnectFailTimeout = reconnectFailTimeout;
+            return this;
+        }
 
         /**
          * Connect to the server synchronously. Once it is completed, the client is ready to send and receive data.
-         *
+         * WARNING: While using autoReconnect, use this method only once.
+         * The default timeout is 3 seconds.
+         * @param host the address of the server
+         * @param port the port of the server
+         * @return true if the connection was successful
+         * @throws InterruptedException if the thread gets interrupted while connecting
+         */
+        public boolean connect(String host, int port) throws InterruptedException {
+            return connect(host, port, 3000);
+        }
+        /**
+         * Connect to the server synchronously. Once it is completed, the client is ready to send and receive data.
+         * WARNING: While using autoReconnect, use this method only once.
          * @param host the address of the server
          * @param port the port of the server
          * @param timeoutMillis the timeout for the connection in millis, or a non-positive value for no timeout
@@ -474,6 +566,12 @@ public class Meow {
          * @throws InterruptedException if the thread gets interrupted while connecting
          */
         public boolean connect(String host, int port, long timeoutMillis) throws InterruptedException {
+            if (context != null) {
+                throw new IllegalStateException("Already connected");
+            }
+            latestConnectionAddress = host;
+            latestConnectionPort = port;
+            latestConnectionTimeout = timeoutMillis;
             if (!initialized.getAndSet(true)) {
                 bootstrap = new Bootstrap();
                 workerGroup = new NioEventLoopGroup();
@@ -510,15 +608,17 @@ public class Meow {
 
             boolean inTime = future.await(timeoutMillis);
             if (future.cause() != null) {
-                System.out.println("Exception...");
-                PlatformDependent.throwException(future.cause());
+                if (future.cause() instanceof ConnectException) {
+                    reconnect.run();
+                } else {
+                    onException.accept(future.cause());
+                }
             }
             return inTime;
         }
 
         /**
          * Synchronously disconnect from the server.
-         *
          * @throws InterruptedException if the thread gets interrupted while disconnecting
          */
         public void disconnect() throws InterruptedException {
@@ -527,10 +627,17 @@ public class Meow {
 
         /**
          * Synchronously uninitialize the client, freeing up all resources.
-         *
+         * Sets {@link #autoReconnect} to false.
          * @throws InterruptedException if the thread gets interrupted while the {@link EventLoopGroup} is being shut down
          */
         public void uninitialize() throws InterruptedException {
+            latestConnectionAddress = null;
+            latestConnectionPort = -1;
+            latestConnectionTimeout = -1;
+            autoReconnect = false;
+            if(reconnectThread != null) {
+                reconnectThread.interrupt();
+            }
             if (initialized.getAndSet(false)) {
                 workerGroup.shutdownGracefully().sync();
             }
@@ -545,8 +652,6 @@ public class Meow {
         public ChannelHandlerContext getContext() {
             return context;
         }
-
-
 
         /**
          * Asynchronously sends data to the server.
@@ -576,8 +681,6 @@ public class Meow {
             context.writeAndFlush(data).addListener((ChannelFutureListener) runnable);
         }
 
-
-
         private class ClientChannelHandler extends ChannelInboundHandlerAdapter {
             @Override
             public void channelActive(ChannelHandlerContext context) {
@@ -604,6 +707,7 @@ public class Meow {
                 if (runnable != null) {
                     runnable.run();
                 }
+                reconnect.run();
             }
 
             @Override
@@ -671,7 +775,7 @@ public class Meow {
      *
      * @param <D> the type of the data which can be processed
      */
-    public static interface DataSerializer<D> {
+    public interface DataSerializer<D> {
         byte[] serialize(D data);
 
         /**

@@ -2,9 +2,8 @@ import world.getmeow.Meow;
 
 import java.nio.charset.StandardCharsets;
 
-public class TestSimpleNettyInNewEnvironment {
+public class TestMeowInNewEnvironment {
     public static void main(String[] args) throws InterruptedException {
-        //A serializer, deserializer for the type of the transmitted data: String
         Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<String>() {
             @Override
             public byte[] serialize(String data) {
@@ -22,21 +21,36 @@ public class TestSimpleNettyInNewEnvironment {
             }
         };
 
-//Instantiate and initialize a new Server.
-//ServerClient is the class which is bound to all connected clients.
         Meow.Server<Meow.ServerClient<String>, String> server = new Meow.Server<>(stringSerializer, Meow.ServerClient::new);
         server.onReceived((client, data) -> client.send(data));
 
-//Bind the server to no specified address, but to the port 800.
         server.start(null, 800);
 
-//Instantiate and initialize a new Client.
         Meow.Client<String> client = new Meow.Client<>(stringSerializer);
+        client.setAutoReconnect(true);
+        client.beforeReconnect((allow) -> {
+            System.out.println("Reconnecting...");
+            allow.set(true);
+        });
         client.onConnected(() -> client.send("Hello Server!"));
+        client.onDisconnected(() -> System.out.println("Disconnected from server!"));
         client.onReceived(System.out::println);
 
-//Connect to the localhost address on the port 800 without any timeout.
         client.connect("localhost", 800, 0);
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                server.stop();
+                Thread.sleep(7000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                server.start(null, 800);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
         while (true) {}
     }
 }
