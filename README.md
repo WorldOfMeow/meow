@@ -9,7 +9,7 @@
 
 # Getting Started
 ## Prerequisites
-Java Development Kit (JDK) 8 or above
+Java Development Kit (JDK) 17 or above
 Apache Maven (for building the project)
 Netty (dependency will be automatically downloaded via Maven)
 
