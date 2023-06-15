@@ -4,12 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Added Project files">
-      <change afterPath="$PROJECT_DIR$/src/test/java/MeowTests.java" afterDir="false" />
+    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Code Changes">
+      <change afterPath="$PROJECT_DIR$/.idea/easteregg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/Meow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/MeowTests.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,18 +38,60 @@
     </option>
   </component>
   <component name="ProjectId" id="2RFSzNPWRQ58GuqzXZxMD2tJkcj" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\samsung\Desktop\meow\src\test\java" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Meow$Client">
+    <configuration name="Meow$Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="world.getmeow.Meow$Client" />
+      <module name="meow" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="world.getmeow.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MeowWebChat" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="world.getmeow.MeowWebChat" />
+      <module name="meow" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="world.getmeow.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Meow$Client" />
+        <item itemvalue="Application.MeowWebChat" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -62,11 +108,21 @@
       <option name="project" value="LOCAL" />
       <updated>1686844813202</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Code Changes">
+      <created>1686845487439</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1686845487439</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added Project files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Project files" />
+    <MESSAGE value="Code Changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code Changes" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>
