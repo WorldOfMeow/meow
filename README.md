@@ -1,5 +1,5 @@
 # Meow Messaging
-### In Development (May not be fully functional)
+#### Still In Development (May not be fully functional)
 ### Meow is a lightweight and simple RPC and Messaging framework built using Java and Netty. It provides a basic structure for implementing remote method invocations between client and server applications.
 
 # Features
@@ -32,7 +32,8 @@ Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<>() {
 };
 
 //Creating a Server
-Meow.Server<Meow.ServerClient<String>, String> server = new Meow.Server<>(stringSerializer, Meow.ServerClient::new);
+Meow.Server<Meow.ServerClient<String>, String> server 
+        = new Meow.Server<>(stringSerializer, Meow.ServerClient::new);
 server.onReceived((client, data) -> client.send(data));
 server.start(null, 800);
 
@@ -44,6 +45,7 @@ client.beforeReconnect((allow) -> {
     System.out.println("Reconnecting...");
     allow.set(true);
 });
+//Basic Event handlers
 client.onConnected(() -> client.send("Hello Server!"));
 client.onDisconnected(() -> System.out.println("Disconnected from server!"));
 client.onReceived(System.out::println);
