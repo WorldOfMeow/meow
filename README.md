@@ -1,5 +1,5 @@
 # Meow Messaging
-### In Development (Non functional)
+### In Development (May not be fully functional)
 ### Meow is a lightweight and simple RPC and Messaging framework built using Java and Netty. It provides a basic structure for implementing remote method invocations between client and server applications.
 
 # Features
@@ -20,7 +20,7 @@ git clone https://github.com/WorldOfMeow/meow.git
 ```
 ### Build the project using Maven:
 ```bash 
-cd meow-rpc
+cd meow
 mvn clean install
 ```
 
