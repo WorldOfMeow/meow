@@ -16,14 +16,10 @@ Netty (dependency will be automatically downloaded via Maven)
 # Installation
 ### Clone the Meow RPC repository:
 ```bash
-shell
-Copy code
 git clone https://github.com/your-username/meow-rpc.git
 ```
 ### Build the project using Maven:
 ```bash 
-shell
-Copy code
 cd meow-rpc
 mvn clean install
 ```
