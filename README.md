@@ -3,9 +3,9 @@
 ### Meow RPC is a lightweight and simple RPC and Messaging framework built using Java and Netty. It provides a basic structure for implementing remote method invocations between client and server applications.
 
 # Features
-## Bi-directional communication between client and server using Netty.
-Basic server implementation for registering and handling remote procedure calls.
-Basic example showcasing the usage of Meow RPC.
+* Bi-directional communication between client and server using Netty.
+* Basic server implementation for registering and handling remote procedure calls.
+* Basic example showcasing the usage of Meow RPC.
 
 # Getting Started
 ## Prerequisites
