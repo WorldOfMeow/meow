@@ -5,7 +5,7 @@
 # Features
 * Bi-directional communication between client and server using Netty.
 * Basic server implementation for registering and handling remote procedure calls.
-* Basic example showcasing the usage of Meow RPC.
+* Basic example showcasing the usage of Meow Messaging.
 
 # Getting Started
 ## Prerequisites
