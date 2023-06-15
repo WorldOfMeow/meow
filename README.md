@@ -16,7 +16,7 @@ Netty (dependency will be automatically downloaded via Maven)
 # Installation
 ### Clone the Meow RPC repository:
 ```bash
-git clone https://github.com/your-username/meow-rpc.git
+git clone https://github.com/WorldOfMeow/meow.git
 ```
 ### Build the project using Maven:
 ```bash 
