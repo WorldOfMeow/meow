@@ -483,7 +483,7 @@ public class Meow {
                         .handler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             public void initChannel(SocketChannel channel) {
-                                channel.pipeline().addLast(new Packets.PacketEncoder<>(serializer),
+                                channel.pipeline().addLast(new Packets.PacketDecoder<>(serializer),
                                         new LengthFieldPrepender(4),
                                         new Packets.PacketEncoder<>(serializer),
                                         new ClientChannelHandler());
