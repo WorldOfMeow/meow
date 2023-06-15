@@ -20,7 +20,7 @@ git clone https://github.com/WorldOfMeow/meow.git
 ```
 ### Build the project using Maven:
 ```bash 
-cd meow-rpc
+cd meow
 mvn clean install
 ```
 
