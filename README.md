@@ -54,7 +54,7 @@ client.connect("localhost", 800, 0);
 ```
 
 # Installation
-###Maven
+### Maven
 ```xml
 <repositories>
     <repository>
