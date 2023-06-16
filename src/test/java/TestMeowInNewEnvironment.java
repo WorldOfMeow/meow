@@ -20,5 +20,6 @@ public class TestMeowInNewEnvironment {
         client.onReceived(System.out::println);
 
         client.connect("localhost", 800, 0);
+        Meow.setLengthFieldLength(8).enableLogging().disableLogging();
     }
 }

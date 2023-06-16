@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>getmeow.world - Developer Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/11.1.0/font/octicons.min.css">
+    <style>
+        /* Global Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        header {
+            padding: 20px 0;
+            text-align: center;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        nav ul a {
+            display: inline;
+            margin-right: 20px;
+            text-decoration: none;
+        }
+
+        main {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        footer {
+            background-color: #f8f8f8;
+            padding: 20px 0;
+            text-align: center;
+            color: #777;
+        }
+
+		@media (max-width: 1000px) {
+        	.navbar {
+            	display: none;
+        	}
+    	}
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1 id="title" class="display-4">&#128568; Welcome to getmeow.world &#128008;</h1>
+    </div>
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="#overview">Overview</a></li>
+                <li class="nav-item"><a class="nav-link" href="#installation">Installation</a></li>
+                <li class="nav-item"><a class="nav-link" href="#usage">Usage</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contributing">Contributing</a></li>
+                <li class="nav-item"><a class="nav-link" href="#license">License</a></li>
+            </ul>
+            <a class="navbar-brand" href="#"><span class="octicon octicon-smiley"></span></a>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="container">
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>
+                Welcome to the developer page for getmeow.world. This page provides information about the meow library, which offers easy Netty messaging capabilities in Java.
+            </p>
+            <p>
+                The meow library simplifies the process of implementing messaging functionality in your Java applications using the popular Netty framework. It provides convenient abstractions and utilities to handle message sending, receiving, and processing, allowing you to focus on your application logic.
+            </p>
+        </section>
+        <section id="installation">
+            <h2>Installation</h2>
+            <p>
+                To start using the meow library in your project, you can add the following dependency and repository to your Maven or Gradle configuration:
+            </p>
+            <pre><code class="language-xml">
+// Maven:
+&lt;repository&gt;
+    &lt;id&gt;meow&lt;/id&gt;
+    &lt;url&gt;https://getmeow.world/repo&lt;/url&gt;
+&lt;/repository&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;world.getmeow&lt;/groupId&gt;
+    &lt;artifactId&gt;meow&lt;/artifactId&gt;
+    &lt;version&gt;1.0.2&lt;/version&gt;
+&lt;/dependency&gt;
+                </code></pre>
+            <pre><code class="language-java">
+// Gradle:
+repositories {
+    maven {
+        url "http://getmeow.world/repo/"
+    }
+}
+
+implementation 'world.getmeow:meow:1.0.2'
+                </code></pre>
+        </section>
+        <section id="usage">
+            <h2>Usage</h2>
+            <p>
+                Once you have added the meow library as a dependency, you can start using its features in your Java code. Here's a basic example of sending a message using the meow library:
+            </p>
+            <pre><code class="language-java">
+Meow.DataSerializer&lt;String&gt; stringSerializer = new Meow.DataSerializer&lt;&gt;() {
+    @Override
+    public byte[] serialize(String data) {
+        return data.getBytes(StandardCharsets.US_ASCII);
+    }
+
+    @Override
+    public String deserialize(byte[] bytes) {
+        return new String(bytes, StandardCharsets.US_ASCII);
+    }
+
+    @Override
+    public Class&lt;String&gt; getType() {
+        return String.class;
+    }
+};
+
+Meow.Server&lt;Meow.ServerClient&lt;String&gt;, String&gt; server
+        = new Meow.Server&lt;&gt;(stringSerializer, Meow.ServerClient::new);
+server.onReceived((client, data) -&gt; client.send(data));
+server.start(null, 800);
+
+Meow.Client&lt;String&gt; client = new Meow.Client&lt;&gt;(stringSerializer);
+client.setAutoReconnect(true);
+client.beforeReconnect((allow) -&gt; {
+    System.out.println("Reconnecting...");
+    allow.set(true);
+});
+client.onConnected(() -&gt; client.send("Hello Server!"));
+client.onDisconnected(() -&gt; System.out.println("Disconnected from server!"));
+client.onReceived(System.out::println);
+client.connect("localhost", 800, 0);
+                </code></pre>
+            For more information Visit the <a href="https://github.com/WorldOfMeow/meow/wiki">Meow wiki on GitHub</a>
+        </section>
+        <section id="contributing">
+            <h2>Contributing &#128062;</h2>
+            <p>
+                Contributions to the meow library are welcome! If you encounter any issues, have suggestions, or would like to contribute to the project, please check out the <a href="https://github.com/WorldOfMeow/meow">meow repository on GitHub</a> for more information on how to get involved.
+            </p>
+        </section>
+        <section id="license">
+            <h2>License</h2>
+            <p>
+                The meow library is released under the "Apache License 2.0". You can find the full text of the license in the project's repository.
+            </p>
+        </section>
+</main>
+<footer>
+    <p>2023 getmeow.world. We &#10084; Open source.</p>
+</footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-xml.min.js"></script>
+<script>
+        Prism.highlightAll();
+    </script>
+</body>
+</html>

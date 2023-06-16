@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="meow:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Changed the Environment of Simple-Netty">
-      <change afterPath="$PROJECT_DIR$/src/test/java/TestSimpleNettyInNewEnvironment.java" afterDir="false" />
+    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Added Templates">
+      <change afterPath="$PROJECT_DIR$/getmeow.world/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/Meow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,14 +45,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\samsung\Desktop\meow\src\test\java" />
@@ -140,14 +148,22 @@
       <option name="project" value="LOCAL" />
       <updated>1686854187982</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added Templates">
+      <created>1686913238602</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1686913238602</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added Project files" />
     <MESSAGE value="Code Changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Code Changes" />
+    <MESSAGE value="Added Templates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Templates" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>

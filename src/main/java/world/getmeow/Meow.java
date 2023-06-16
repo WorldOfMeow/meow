@@ -23,6 +23,10 @@ import java.util.logging.Logger;
 
 public class Meow {
     private final static Logger logger = Logger.getLogger("Meow");
+    static {
+        //Logging is disabled by default
+        logger.setLevel(Level.OFF);
+    }
     private static int lengthFieldLength = 4;
     public static Logger getLogger() {
         return logger;
