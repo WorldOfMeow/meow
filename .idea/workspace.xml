@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="meow-all:jar" />
+      <artifact name="meow:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Code Changes">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Added Reconnection">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TestSimpleNettyInNewEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestSimpleNettyInNewEnvironment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,9 +52,10 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.13867188" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -135,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686854187982</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added Reconnection">
+      <created>1686869299946</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1686869299946</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -153,7 +166,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added Project files" />
     <MESSAGE value="Code Changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Code Changes" />
+    <MESSAGE value="Added Reconnection" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Reconnection" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="com.vaadin.designer2.intellij.settings.SizePresetsSettingsComponent">

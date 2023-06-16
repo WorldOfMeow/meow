@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 public class Meow {
     public final static Logger logger = Logger.getLogger("Meow");
+    private final static int LengthFieldLength = 4;
 
     /**
      * A server-side class bound to a client which is connected to the server.
@@ -211,7 +212,7 @@ public class Meow {
                         @Override
                         public void initChannel(SocketChannel channel) {
                             channel.pipeline().addLast(new Packets.PacketDecoder<>(serializer),
-                                    new LengthFieldPrepender(4),
+                                    new LengthFieldPrepender(LengthFieldLength),
                                     new Packets.PacketEncoder<>(serializer),
                                     new ServerChannelHandler());
 
@@ -582,7 +583,7 @@ public class Meow {
                             @Override
                             public void initChannel(SocketChannel channel) {
                                 channel.pipeline().addLast(new Packets.PacketDecoder<>(serializer),
-                                        new LengthFieldPrepender(4),
+                                        new LengthFieldPrepender(LengthFieldLength),
                                         new Packets.PacketEncoder<>(serializer),
                                         new ClientChannelHandler());
 

@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 public class TestMeowInNewEnvironment {
     public static void main(String[] args) throws InterruptedException {
-        Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<String>() {
+        Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<>() {
             @Override
             public byte[] serialize(String data) {
                 return data.getBytes(StandardCharsets.US_ASCII);
@@ -37,20 +37,5 @@ public class TestMeowInNewEnvironment {
         client.onReceived(System.out::println);
 
         client.connect("localhost", 800, 0);
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-                server.stop();
-                Thread.sleep(7000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                server.start(null, 800);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        while (true) {}
     }
 }
