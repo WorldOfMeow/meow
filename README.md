@@ -54,7 +54,23 @@ client.connect("localhost", 800, 0);
 ```
 
 # Installation
-### Clone the Meow RPC repository:
+###Maven
+```xml
+<repositories>
+    <repository>
+        <id>meow</id>
+        <url>https://getmeow.world/repo</url>
+    </repository>
+</repositories>
+<dependencies>
+    <dependency>
+        <groupId>world.getmeow</groupId>
+        <artifactId>meow</artifactId>
+        <version>1.0.1</version>
+    </dependency>
+</dependencies>
+```
+### Or Clone the Meow RPC repository:
 ```bash
 git clone https://github.com/WorldOfMeow/meow.git
 ```
