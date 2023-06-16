@@ -1,5 +1,5 @@
 # Meow Messaging
-### In Development (May not be fully functional)
+#### Still In Development (May not be fully functional)
 ### Meow is a lightweight and simple RPC and Messaging framework built using Java and Netty. It provides a basic structure for implementing remote method invocations between client and server applications.
 
 # Features
@@ -9,12 +9,78 @@
 
 # Getting Started
 ## Prerequisites
-Java Development Kit (JDK) 17 or above
-Apache Maven (for building the project)
-Netty (dependency will be automatically downloaded via Maven)
+* Java Development Kit (JDK) 17 or above
+* Apache Maven (for building the project)
+* Netty (dependency will be automatically downloaded via Maven)
+
+# Example
+```java
+//Creating a DataSerializer to Serialize outgoing and incoming messages.
+Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<>() {
+    @Override
+    public byte[] serialize(String data) {
+        return data.getBytes(StandardCharsets.US_ASCII);
+    }
+    @Override
+    public String deserialize(byte[] bytes) {
+        return new String(bytes, StandardCharsets.US_ASCII);
+    }
+    @Override
+    public Class<String> getType() {
+        return String.class;
+    }
+};
+
+//Creating a Server
+Meow.Server<Meow.ServerClient<String>, String> server 
+        = new Meow.Server<>(stringSerializer, Meow.ServerClient::new);
+server.onReceived((client, data) -> client.send(data));
+server.start(null, 800);
+
+//Creating a client
+Meow.Client<String> client = new Meow.Client<>(stringSerializer);
+//Enabling autoreconnect
+client.setAutoReconnect(true);
+client.beforeReconnect((allow) -> {
+    System.out.println("Reconnecting...");
+    allow.set(true);
+});
+//Basic Event handlers
+client.onConnected(() -> client.send("Hello Server!"));
+client.onDisconnected(() -> System.out.println("Disconnected from server!"));
+client.onReceived(System.out::println);
+//Connect to the Server
+client.connect("localhost", 800, 0);
+```
 
 # Installation
-### Clone the Meow RPC repository:
+### Maven
+```xml
+<repositories>
+    <repository>
+        <id>meow</id>
+        <url>https://getmeow.world/repo</url>
+    </repository>
+</repositories>
+<dependencies>
+    <dependency>
+        <groupId>world.getmeow</groupId>
+        <artifactId>meow</artifactId>
+        <version>1.0.1</version>
+    </dependency>
+</dependencies>
+```
+### Gradle
+```java
+repositories {
+    maven {
+        url "http://getmeow.world/repo/"
+    }
+}
+
+implementation 'world.getmeow:meow:1.0.1'
+```
+### Or Clone the Meow RPC repository:
 ```bash
 git clone https://github.com/WorldOfMeow/meow.git
 ```
