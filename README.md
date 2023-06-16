@@ -74,7 +74,7 @@ client.connect("localhost", 800, 0);
 ```java
 repositories {
     maven {
-        url "http://getmeow.world/maven-repo/"
+        url "http://getmeow.world/repo/"
     }
 }
 
