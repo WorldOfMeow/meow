@@ -70,6 +70,16 @@ client.connect("localhost", 800, 0);
     </dependency>
 </dependencies>
 ```
+### Gradle
+```java
+repositories {
+    maven {
+        url "http://getmeow.world/maven-repo/"
+    }
+}
+
+implementation 'world.getmeow:meow:1.0.1'
+```
 ### Or Clone the Meow RPC repository:
 ```bash
 git clone https://github.com/WorldOfMeow/meow.git
