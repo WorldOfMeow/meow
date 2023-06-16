@@ -52,6 +52,7 @@ client.onReceived(System.out::println);
 //Connect to the Server
 client.connect("localhost", 800, 0);
 ```
+For more Examples or Documentation go visit the [https://github.com/WorldOfMeow/meow/wiki](Meow wiki)
 
 # Installation
 ### Maven
