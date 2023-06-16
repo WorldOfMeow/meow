@@ -76,8 +76,14 @@ public class Meow {
      */
     public static class ServerClient<D> {
         private volatile ChannelHandlerContext context;
+        private final HashMap<String, String> variables = new HashMap<>();
 
-
+        /**
+         * @return the connections session variables HashMap<String, String>
+         */
+        public HashMap<String, String> getVariables() {
+            return variables;
+        }
 
         /**
          * Asynchronously sends data to the client.
@@ -155,6 +161,7 @@ public class Meow {
      */
     public static class Server<C extends ServerClient<D>, D> {
         private final Set<C> clients = new HashSet<>();
+        private final Set<MeowServerInterface<D>> interfaces = new HashSet<>();
         private final DataSerializer<D> serializer;
         private final Supplier<C> clientSupplier;
         private EventLoopGroup bossGroup;
@@ -178,7 +185,9 @@ public class Meow {
             this.clientSupplier = clientSupplier;
         }
 
-
+        public void addInterface(MeowServerInterface<D> meowServerInterface) {
+            interfaces.add(meowServerInterface);
+        }
 
         /**
          * Called when the {@link ServerBootstrap} has been configured.
@@ -245,6 +254,7 @@ public class Meow {
          * the {@code host} and {@code port} are being bound
          */
         public void start(String host, int port) throws InterruptedException {
+            interfaces.forEach(i -> i.beforeStart((Server<ServerClient<D>, D>) this));
             ServerBootstrap bootstrap = new ServerBootstrap();
             bossGroup = new NioEventLoopGroup();
             workerGroup = new NioEventLoopGroup();
@@ -260,6 +270,7 @@ public class Meow {
                                     new ServerChannelHandler());
 
                             Consumer<SocketChannel> consumer = onChannelInitialized;
+                            interfaces.forEach(i -> i.onChannelInitialized(channel));
                             if (consumer != null) {
                                 consumer.accept(channel);
                             }
@@ -269,6 +280,7 @@ public class Meow {
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             Consumer<ServerBootstrap> consumer = onConfigured;
+            interfaces.forEach(i -> i.onConfigured(bootstrap));
             if (consumer != null) {
                 consumer.accept(bootstrap);
             }
@@ -283,6 +295,7 @@ public class Meow {
          * @throws InterruptedException if the thread gets interrupted while the {@link EventLoopGroup}s are being shut down
          */
         public void stop() throws InterruptedException {
+            interfaces.forEach(MeowServerInterface::onStop);
             synchronized (clients) {
                 clients.clear();
             }
@@ -390,6 +403,7 @@ public class Meow {
                     clients.add(client);
                 }
                 Consumer<C> consumer = onConnected;
+                interfaces.forEach(i -> i.onConnected(client));
                 if (consumer != null) {
                     consumer.accept(client);
                 }
@@ -398,9 +412,18 @@ public class Meow {
             @Override
             public void channelRead(ChannelHandlerContext context, Object message) {
                 BiConsumer<C, D> consumer = onReceived;
-                if (consumer != null) {
-                    //noinspection unchecked
-                    consumer.accept(client, (D) message);
+                AtomicBoolean forward = new AtomicBoolean(true);
+                for (MeowServerInterface<D> i : interfaces) {
+                    if(forward.get()) {
+                        i.onReceived(client, (D) message, forward);
+                    } else {
+                        break;
+                    }
+                }
+                if(forward.get()) {
+                    if (consumer != null) {
+                        consumer.accept(client, (D) message);
+                    }
                 }
             }
 
@@ -410,6 +433,7 @@ public class Meow {
                     clients.remove(client);
                 }
                 Consumer<C> consumer = onDisconnected;
+                interfaces.forEach(i -> i.onDisconnected(client));
                 if (consumer != null) {
                     consumer.accept(client);
                 }
@@ -418,6 +442,7 @@ public class Meow {
             @Override
             public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
                 BiConsumer<C, Throwable> consumer = onException;
+                interfaces.forEach(i -> i.onException(client, cause));
                 if (consumer != null) {
                     consumer.accept(client, cause);
                 }
