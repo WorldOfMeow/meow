@@ -4,8 +4,8 @@
 
 # Features
 * Bi-directional communication between client and server using Netty.
-* Basic server implementation for registering and handling remote procedure calls.
-* Basic example showcasing the usage of Meow RPC.
+* Basic server implementation for registering and handling remote procedure calls. //TODO
+* Basic example showcasing the usage of Meow Messaging.
 
 # Getting Started
 ## Prerequisites
@@ -66,7 +66,7 @@ client.connect("localhost", 800, 0);
     <dependency>
         <groupId>world.getmeow</groupId>
         <artifactId>meow</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 </dependencies>
 ```
@@ -78,9 +78,9 @@ repositories {
     }
 }
 
-implementation 'world.getmeow:meow:1.0.1'
+implementation 'world.getmeow:meow:1.0.2'
 ```
-### Or Clone the Meow RPC repository:
+### Or Clone the Meow Messaging repository:
 ```bash
 git clone https://github.com/WorldOfMeow/meow.git
 ```
