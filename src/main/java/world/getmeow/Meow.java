@@ -22,8 +22,47 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Meow {
-    public final static Logger logger = Logger.getLogger("Meow");
-    private final static int LengthFieldLength = 4;
+    private final static Logger logger = Logger.getLogger("Meow");
+    private static int lengthFieldLength = 4;
+    public static Logger getLogger() {
+        return logger;
+    }
+    public static int getLengthFieldLength() {
+        return lengthFieldLength;
+    }
+    /**
+     * Sets the length of the length field in bytes.
+     * Must be 1, 2, 3, 4, or 8.
+     * Default is 4.
+     * @param length the length of the length field in bytes
+     * @return chainable meow
+    */
+    public static Meow setLengthFieldLength(int length) {
+        //lengthfieldlength must be 1, 2, 3, 4, or 8
+        if (lengthFieldLength != 1 && lengthFieldLength != 2 && lengthFieldLength != 3 && lengthFieldLength != 4 && lengthFieldLength != 8) {
+            throw new IllegalArgumentException("lengthFieldLength must be 1, 2, 3, 4, or 8");
+        }
+        lengthFieldLength = length;
+        //chainable meow
+        return new Meow();
+    }
+    /**
+     * Sets the logging level to {@code Level.OFF} of the Meow logger.
+     */
+    public Meow disableLogging() {
+        logger.setLevel(Level.OFF);
+        return this;
+    }
+    /**
+     * Sets the logging level to {@code Level.ALL} of the Meow logger.
+     */
+    public Meow enableLogging() {
+        logger.setLevel(Level.ALL);
+        return this;
+    }
+    public Meow() {
+
+    }
 
     /**
      * A server-side class bound to a client which is connected to the server.
@@ -212,7 +251,7 @@ public class Meow {
                         @Override
                         public void initChannel(SocketChannel channel) {
                             channel.pipeline().addLast(new Packets.PacketDecoder<>(serializer),
-                                    new LengthFieldPrepender(LengthFieldLength),
+                                    new LengthFieldPrepender(lengthFieldLength),
                                     new Packets.PacketEncoder<>(serializer),
                                     new ServerChannelHandler());
 
@@ -583,7 +622,7 @@ public class Meow {
                             @Override
                             public void initChannel(SocketChannel channel) {
                                 channel.pipeline().addLast(new Packets.PacketDecoder<>(serializer),
-                                        new LengthFieldPrepender(LengthFieldLength),
+                                        new LengthFieldPrepender(lengthFieldLength),
                                         new Packets.PacketEncoder<>(serializer),
                                         new ClientChannelHandler());
 
@@ -788,8 +827,6 @@ public class Meow {
         D deserialize(byte[] bytes);
 
         /**
-         * Returns the type of the data which can be processed.
-         *
          * @return the type of the data which can be processed
          */
         Class<D> getType();

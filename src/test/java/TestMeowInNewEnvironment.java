@@ -1,26 +1,9 @@
 import world.getmeow.Meow;
-
-import java.nio.charset.StandardCharsets;
+import world.getmeow.Templates;
 
 public class TestMeowInNewEnvironment {
     public static void main(String[] args) throws InterruptedException {
-        Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<>() {
-            @Override
-            public byte[] serialize(String data) {
-                return data.getBytes(StandardCharsets.US_ASCII);
-            }
-
-            @Override
-            public String deserialize(byte[] bytes) {
-                return new String(bytes, StandardCharsets.US_ASCII);
-            }
-
-            @Override
-            public Class<String> getType() {
-                return String.class;
-            }
-        };
-
+        Meow.DataSerializer<String> stringSerializer = Templates.stringSerializer;
         Meow.Server<Meow.ServerClient<String>, String> server = new Meow.Server<>(stringSerializer, Meow.ServerClient::new);
         server.onReceived((client, data) -> client.send(data));
 
