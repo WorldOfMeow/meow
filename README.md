@@ -67,7 +67,7 @@ For more Examples or Documentation go visit the Wiki: https://github.com/WorldOf
     <dependency>
         <groupId>world.getmeow</groupId>
         <artifactId>meow</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </dependency>
 </dependencies>
 ```
@@ -79,7 +79,7 @@ repositories {
     }
 }
 
-implementation 'world.getmeow:meow:1.0.3'
+implementation 'world.getmeow:meow:1.0.4'
 ```
 ### Or Clone the Meow Messaging repository:
 ```bash
