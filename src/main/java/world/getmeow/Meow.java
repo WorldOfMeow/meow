@@ -462,13 +462,13 @@ public class Meow {
         private long reconnectFailTimeout = 3000;
         private Thread reconnectThread;
         private boolean autoReconnect = false;
+        private final Set<MeowClientInterface<D>> interfaces = new HashSet<>();
         private final DataSerializer<D> serializer;
         private Bootstrap bootstrap;
         private EventLoopGroup workerGroup;
         private volatile ChannelHandlerContext context;
         private final AtomicBoolean initialized = new AtomicBoolean(false);
         private final AtomicBoolean continueReconnect = new AtomicBoolean(true);
-
         private volatile Consumer<Bootstrap> onConfigured;
         private volatile Consumer<SocketChannel> onChannelInitialized;
         private volatile Runnable onConnected;
@@ -477,6 +477,10 @@ public class Meow {
         private volatile Runnable onDisconnected;
         private volatile Consumer<Throwable> onException = Throwable::printStackTrace;
 
+        public void addInterface(MeowClientInterface<D> meowClientInterface) {
+            interfaces.add(meowClientInterface);
+        }
+
         private final Runnable reconnect = () -> {
             if (continueReconnect.get() && autoReconnect) {
                 if (reconnectThread != null) {
@@ -484,6 +488,9 @@ public class Meow {
                 }
                 reconnectThread = new Thread(() -> {
                     while (autoReconnect) {
+                        interfaces.forEach(dMeowClientInterface -> {
+                            dMeowClientInterface.beforeReconnect(this, continueReconnect);
+                        });
                         if(continueReconnect.get()) {
                             try {
                                 if (beforeReconnect != null) {
@@ -638,13 +645,15 @@ public class Meow {
             if (context != null) {
                 throw new IllegalStateException("Already connected");
             }
+            interfaces.forEach(interfaces -> {
+                interfaces.beforeConnect(this, host, port, timeoutMillis);
+            });
             latestConnectionAddress = host;
             latestConnectionPort = port;
             latestConnectionTimeout = timeoutMillis;
             if (!initialized.getAndSet(true)) {
                 bootstrap = new Bootstrap();
                 workerGroup = new NioEventLoopGroup();
-
                 bootstrap.group(workerGroup)
                         .channel(NioSocketChannel.class)
                         .handler(new ChannelInitializer<SocketChannel>() {
@@ -662,7 +671,7 @@ public class Meow {
                             }
                         })
                         .option(ChannelOption.SO_KEEPALIVE, true);
-
+                interfaces.forEach(interfaces -> interfaces.onConfigured(this, bootstrap));
                 Consumer<Bootstrap> consumer = onConfigured;
                 if (consumer != null) {
                     consumer.accept(bootstrap);
@@ -691,6 +700,7 @@ public class Meow {
          * @throws InterruptedException if the thread gets interrupted while disconnecting
          */
         public void disconnect() throws InterruptedException {
+            interfaces.forEach(interfaces -> interfaces.beforeDisconnect(this));
             context.close().sync();
         }
 
@@ -754,6 +764,7 @@ public class Meow {
             @Override
             public void channelActive(ChannelHandlerContext context) {
                 Client.this.context = context;
+                interfaces.forEach(interfaces -> interfaces.onConnected(Client.this));
                 Runnable runnable = onConnected;
                 if (runnable != null) {
                     runnable.run();
@@ -763,6 +774,15 @@ public class Meow {
             @Override
             public void channelRead(ChannelHandlerContext context, Object message) {
                 Consumer<D> consumer = onReceived;
+                AtomicBoolean forward = new AtomicBoolean(true);
+                for (MeowClientInterface<D> dMeowClientInterface : interfaces) {
+                    if (forward.get())
+                        dMeowClientInterface.onReceived(Client.this, (D) message, forward);
+                    else break;
+                }
+                if (!forward.get()) {
+                    return;
+                }
                 if (consumer != null) {
                     //noinspection unchecked
                     consumer.accept((D) message);
@@ -772,6 +792,7 @@ public class Meow {
             @Override
             public void channelInactive(ChannelHandlerContext context) {
                 Client.this.context = null;
+                interfaces.forEach(interfaces -> interfaces.onDisconnected(Client.this));
                 Runnable runnable = onDisconnected;
                 if (runnable != null) {
                     runnable.run();
@@ -781,6 +802,7 @@ public class Meow {
 
             @Override
             public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
+                interfaces.forEach(interfaces -> interfaces.onException(Client.this, cause));
                 Consumer<Throwable> consumer = onException;
                 if (consumer != null) {
                     consumer.accept(cause);

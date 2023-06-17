@@ -9,9 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Added Files">
-      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowServerInterface.java" afterDir="false" />
+    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Added MeowServerInterface and Testing">
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowClientInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/getmeow.world/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/getmeow.world/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" afterDir="false" />
     </list>
@@ -163,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686916182897</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Added MeowServerInterface and Testing">
+      <created>1686930257520</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1686930257520</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -172,7 +181,8 @@
     <MESSAGE value="Code Changes" />
     <MESSAGE value="Added Templates" />
     <MESSAGE value="Added Files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Files" />
+    <MESSAGE value="Added MeowServerInterface and Testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added MeowServerInterface and Testing" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>

@@ -1,6 +1,8 @@
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.socket.SocketChannel;
 import world.getmeow.Meow;
+import world.getmeow.MeowClientInterface;
 import world.getmeow.MeowServerInterface;
 import world.getmeow.Templates;
 
@@ -69,6 +71,49 @@ public class TestMeowInNewEnvironment {
             System.out.println("Reconnecting...");
             allow.set(true);
         });
+
+        client.addInterface(new MeowClientInterface<>() {
+            @Override
+            public void beforeReconnect(Meow.Client<String> client, AtomicBoolean allow) {
+                System.out.println("Reconnecting...");
+            }
+
+            @Override
+            public void onConnected(Meow.Client<String> client) {
+                System.out.println("Connected to server!");
+            }
+
+            @Override
+            public void beforeDisconnect(Meow.Client<String> client) {
+                System.out.println("Disconnecting from server...");
+            }
+
+            @Override
+            public void onReceived(Meow.Client<String> client, String data, AtomicBoolean forward) {
+                System.out.println("Received data: " + data);
+            }
+
+            @Override
+            public void onDisconnected(Meow.Client<String> client) {
+                System.out.println("Disconnected from server!");
+            }
+
+            @Override
+            public void onException(Meow.Client<String> client, Throwable e) {
+                System.out.println("Exception occurred!");
+            }
+
+            @Override
+            public void beforeConnect(Meow.Client<String> client, String host, int port, long timeoutMillis) {
+                System.out.println("Connecting to server...");
+            }
+
+            @Override
+            public void onConfigured(Meow.Client<String> dClient, Bootstrap bootstrap) {
+                System.out.println("Client configured!");
+            }
+        });
+
         client.onConnected(() -> client.send("Hello Server!"));
         client.onDisconnected(() -> System.out.println("Disconnected from server!"));
         client.onReceived(System.out::println);
