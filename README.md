@@ -1,5 +1,5 @@
 # Meow Messaging
-#### Still In Development (May not be fully functional)
+#### The Next Meow Version "1.0.5" will add a simple http server
 ### Meow is a lightweight and simple RPC and Messaging framework built using Java and Netty. It provides a basic structure for implementing remote method invocations between client and server applications.
 
 # Features
