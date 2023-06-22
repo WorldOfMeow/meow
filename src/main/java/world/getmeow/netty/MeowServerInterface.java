@@ -1,4 +1,4 @@
-package world.getmeow;
+package world.getmeow.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.socket.SocketChannel;

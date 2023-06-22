@@ -1,11 +1,10 @@
 # Meow Messaging
-#### The Next Meow Version "1.0.5" will add a simple http server
-### Meow is a lightweight and simple RPC and Messaging framework built using Java and Netty. It provides a basic structure for implementing remote method invocations between client and server applications.
+### Meow is a lightweight and simple Http and Messaging framework built using Java and Netty. It provides a basic structure for implementing remote method invocations between client and server applications.
 
 # Features
 * Bi-directional communication between client and server using Netty.
-* Basic server implementation for registering and handling remote procedure calls. //TODO
-* Basic example showcasing the usage of Meow Messaging.
+* Basic Http server implementation using Java HttpServer.
+* Basic example showcasing the usage of Meow.
 
 # Getting Started
 ## Prerequisites
@@ -13,7 +12,7 @@
 * Apache Maven (for building the project)
 * Netty (dependency will be automatically downloaded via Maven)
 
-# Example
+# Socket Example
 ```java
 //Creating a DataSerializer to Serialize outgoing and incoming messages.
 Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<>() {
@@ -52,6 +51,22 @@ client.onReceived(System.out::println);
 //Connect to the Server
 client.connect("localhost", 800, 0);
 ```
+# Http Example
+Currently only supports Http and not Https
+```java
+MeowHttp meowHttp = new MeowHttp(8090); //port 8090
+        .addRouteHandler("/hello", new RouteHandler() {
+            @Override
+            public void handle(HttpExchange httpExchange) {
+                HttpUtils.sendResponse(httpExchange, "Hello, world!");
+            }
+        }).addRouteHandler("/epicroute", new RouteHandler() {
+            @Override
+            public void handle(HttpExchange httpExchange) {
+                HttpUtils.sendResponse(httpExchange, "This is an epic route!");
+            }
+        }).start();
+```
 For more Examples or Documentation go visit the Wiki: https://github.com/WorldOfMeow/meow/wiki
 
 # Installation
@@ -67,7 +82,7 @@ For more Examples or Documentation go visit the Wiki: https://github.com/WorldOf
     <dependency>
         <groupId>world.getmeow</groupId>
         <artifactId>meow</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </dependency>
 </dependencies>
 ```
@@ -79,7 +94,7 @@ repositories {
     }
 }
 
-implementation 'world.getmeow:meow:1.0.4'
+implementation 'world.getmeow:meow:1.0.5'
 ```
 ### Or Clone the Meow Messaging repository:
 ```bash

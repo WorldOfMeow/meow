@@ -1,16 +1,15 @@
-package world.getmeow;
+package world.getmeow.netty;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.MessageToByteEncoder;
+import world.getmeow.utils.DataSerializer;
+import world.getmeow.utils.NettyPackets;
 
 import java.net.ConnectException;
 import java.util.*;
@@ -53,16 +52,16 @@ public class Meow {
     /**
      * Sets the logging level to {@code Level.OFF} of the Meow logger.
      */
-    public Meow disableLogging() {
+    public static Meow disableLogging() {
         logger.setLevel(Level.OFF);
-        return this;
+        return new Meow();
     }
     /**
      * Sets the logging level to {@code Level.ALL} of the Meow logger.
      */
-    public Meow enableLogging() {
+    public static Meow enableLogging() {
         logger.setLevel(Level.ALL);
-        return this;
+        return new Meow();
     }
     public Meow() {
 
@@ -264,9 +263,9 @@ public class Meow {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel channel) {
-                            channel.pipeline().addLast(new Packets.PacketDecoder<>(serializer),
+                            channel.pipeline().addLast(new NettyPackets.PacketDecoder<>(serializer),
                                     new LengthFieldPrepender(lengthFieldLength),
-                                    new Packets.PacketEncoder<>(serializer),
+                                    new NettyPackets.PacketEncoder<>(serializer),
                                     new ServerChannelHandler());
 
                             Consumer<SocketChannel> consumer = onChannelInitialized;
@@ -659,10 +658,11 @@ public class Meow {
                         .handler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             public void initChannel(SocketChannel channel) {
-                                channel.pipeline().addLast(new Packets.PacketDecoder<>(serializer),
-                                        new LengthFieldPrepender(lengthFieldLength),
-                                        new Packets.PacketEncoder<>(serializer),
-                                        new ClientChannelHandler());
+                                channel.pipeline()
+                                        .addLast(new NettyPackets.PacketDecoder<>(serializer),
+                                            new LengthFieldPrepender(lengthFieldLength),
+                                            new NettyPackets.PacketEncoder<>(serializer),
+                                            new ClientChannelHandler());
 
                                 Consumer<SocketChannel> consumer = onChannelInitialized;
                                 if (consumer != null) {
@@ -701,6 +701,7 @@ public class Meow {
          */
         public void disconnect() throws InterruptedException {
             interfaces.forEach(interfaces -> interfaces.beforeDisconnect(this));
+            autoReconnect = false;
             context.close().sync();
         }
 
@@ -809,77 +810,5 @@ public class Meow {
                 }
             }
         }
-    }
-
-    /**
-     * Connects the {@link DataSerializer} to Netty's {@link ByteToMessageDecoder}.
-     */
-    public static class Packets {
-        public static class PacketDecoder<D> extends ByteToMessageDecoder {
-            private final DataSerializer<D> serializer;
-            private int size = -1;
-
-            public PacketDecoder(DataSerializer<D> serializer) {
-                this.serializer = serializer;
-            }
-
-
-
-            @Override
-            protected void decode(ChannelHandlerContext context, ByteBuf inputBuffer, List<Object> output) {
-                if (size == -1) {
-                    if (inputBuffer.readableBytes() < 4) {
-                        return;
-                    }
-
-                    size = inputBuffer.readInt();
-                }
-
-                if (inputBuffer.readableBytes() >= size) {
-                    byte[] bytes = new byte[size];
-                    inputBuffer.readBytes(bytes);
-                    output.add(serializer.deserialize(bytes));
-                    size = -1;
-                }
-            }
-        }
-
-        public static class PacketEncoder<D> extends MessageToByteEncoder<D> {
-            private final DataSerializer<D> serializer;
-
-            public PacketEncoder(DataSerializer<D> serializer) {
-                super(serializer.getType());
-                this.serializer = serializer;
-            }
-
-            @Override
-            protected void encode(ChannelHandlerContext context, D data, ByteBuf outputBuffer) {
-                outputBuffer.writeBytes(serializer.serialize(data));
-            }
-        }
-
-    }
-
-    /**
-     * A serializer and deserializer for all the data which is sent between the server and the client.
-     * The implementation should be thread-safe.
-     *
-     * @param <D> the type of the data which can be processed
-     */
-    public interface DataSerializer<D> {
-        byte[] serialize(D data);
-
-        /**
-         * Deserializes a single instance of the data from the provided byte array.
-         *
-         * @param bytes the serialized data
-         * @return the deserialized data
-         */
-        D deserialize(byte[] bytes);
-
-        /**
-         * @return the type of the data which can be processed
-         */
-        Class<D> getType();
     }
 }

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
+      <artifact name="meow-all:jar" />
       <artifact name="meow:jar" />
     </artifacts-to-build>
   </component>
@@ -9,12 +10,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Added MeowServerInterface and Testing">
-      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowClientInterface.java" afterDir="false" />
+    <list default="true" id="4f116177-22ab-454d-9ed4-4ad89f990f64" name="Changes" comment="Added Reconnection">
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/http/MeowHttp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/http/RouteHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/utils/DataSerializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/utils/HttpUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/utils/NettyPackets.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/handler/LoginClientHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/handler/LoginServerHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/getmeow.world/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/getmeow.world/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/Meow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/netty/Meow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowClientInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/netty/MeowClientInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/MeowServerInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/netty/MeowServerInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/world/getmeow/Templates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/world/getmeow/utils/Templates.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/TestMeowInNewEnvironment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,23 +32,33 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="package-info" />
         <option value="Class" />
-        <option value="Interface" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="workspaceImportEnabled" value="true" />
-      </MavenImportingSettings>
-    </option>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
   </component>
   <component name="ProjectId" id="2RFSzNPWRQ58GuqzXZxMD2tJkcj" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -48,29 +68,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
-  }
-}]]></component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/world/getmeow/http" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.13867188" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\meow\src\main\java\world\getmeow\http" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\meow\src\test" />
       <recent name="C:\Users\samsung\Desktop\meow\src\test\java" />
     </key>
   </component>
   <component name="RunManager" selected="Application.TestMeowInNewEnvironment">
     <configuration name="Meow$Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="world.getmeow.Meow$Client" />
+      <option name="MAIN_CLASS_NAME" value="world.getmeow.netty.Meow$Client" />
       <module name="meow" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="world.getmeow.*" />
+          <option name="PATTERN" value="world.getmeow.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -83,7 +106,7 @@
       <module name="meow" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="world.getmeow.*" />
+          <option name="PATTERN" value="world.getmeow.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -98,17 +121,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestSimpleNettyInNewEnvironment" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="TestSimpleNettyInNewEnvironment" />
-      <module name="meow" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.TestMeowInNewEnvironment" />
-        <item itemvalue="Application.TestSimpleNettyInNewEnvironment" />
         <item itemvalue="Application.Meow$Client" />
         <item itemvalue="Application.MeowWebChat" />
       </list>
@@ -151,38 +166,54 @@
       <option name="project" value="LOCAL" />
       <updated>1686854187982</updated>
     </task>
-    <task id="LOCAL-00005" summary="Added Templates">
-      <created>1686913238602</created>
+    <task id="LOCAL-00005" summary="Added Reconnection">
+      <created>1686869299946</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1686913238602</updated>
+      <updated>1686869299946</updated>
     </task>
-    <task id="LOCAL-00006" summary="Added Files">
-      <created>1686916182897</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1686916182897</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Added MeowServerInterface and Testing">
-      <created>1686930257520</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1686930257520</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
+    <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added Project files" />
     <MESSAGE value="Code Changes" />
-    <MESSAGE value="Added Templates" />
-    <MESSAGE value="Added Files" />
-    <MESSAGE value="Added MeowServerInterface and Testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added MeowServerInterface and Testing" />
+    <MESSAGE value="Added Reconnection" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Reconnection" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="com.vaadin.designer2.intellij.settings.SizePresetsSettingsComponent">
+    <option name="sizePresets">
+      <list>
+        <SizePreset>
+          <option name="caption" value="Phone" />
+          <option name="height" value="568" />
+          <option name="width" value="320" />
+        </SizePreset>
+        <SizePreset>
+          <option name="caption" value="Tablet" />
+          <option name="height" value="1024" />
+          <option name="width" value="768" />
+        </SizePreset>
+        <SizePreset>
+          <option name="caption" value="Desktop" />
+          <option name="height" value="900" />
+          <option name="width" value="1440" />
+        </SizePreset>
+      </list>
+    </option>
   </component>
 </project>

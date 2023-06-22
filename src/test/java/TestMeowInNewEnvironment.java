@@ -1,16 +1,54 @@
+import com.sun.net.httpserver.HttpExchange;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.socket.SocketChannel;
-import world.getmeow.Meow;
-import world.getmeow.MeowClientInterface;
-import world.getmeow.MeowServerInterface;
-import world.getmeow.Templates;
+import world.getmeow.http.MeowHttp;
+import world.getmeow.http.RouteHandler;
+import world.getmeow.netty.Meow;
+import world.getmeow.netty.MeowClientInterface;
+import world.getmeow.netty.MeowServerInterface;
+import world.getmeow.utils.DataSerializer;
+import world.getmeow.utils.HttpUtils;
+import world.getmeow.utils.Templates;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestMeowInNewEnvironment {
     public static void main(String[] args) throws InterruptedException {
-        Meow.DataSerializer<String> stringSerializer = Templates.stringSerializer;
+        Meow.enableLogging();
+        new Thread(() -> {
+            MeowHttp meowHttp = new MeowHttp(8090);
+            try {
+                meowHttp.addRouteHandler("/hello", new RouteHandler() {
+                    @Override
+                    public void handle(HttpExchange httpExchange) {
+                        HttpUtils.sendResponse(httpExchange, "Hello, world!");
+                    }
+                }).addRouteHandler("/", new RouteHandler() {
+                    @Override
+                    public void handle(HttpExchange httpExchange) {
+                        HttpUtils.sendResponse(httpExchange, "Home page test!");
+                    }
+                })
+                        .start()
+                        .addRouteHandler("/bye", new RouteHandler() {
+                    @Override
+                    public void handle(HttpExchange httpExchange) {
+                        meowHttp.stop();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            meowHttp.stop();
+        }).start();
+        DataSerializer<String> stringSerializer = Templates.stringSerializer;
         Meow.Server<Meow.ServerClient<String>, String> server = new Meow.Server<>(stringSerializer, Meow.ServerClient::new);
         MeowServerInterface<String> meowServerInterface = new MeowServerInterface<>() {
             Meow.Server<Meow.ServerClient<String>, String> server;
@@ -119,5 +157,10 @@ public class TestMeowInNewEnvironment {
         client.onReceived(System.out::println);
 
         client.connect("localhost", 800, 0);
+
+        Thread.sleep(3000);
+
+        client.disconnect();
+        server.stop();
     }
 }

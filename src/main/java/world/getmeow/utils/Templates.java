@@ -1,4 +1,6 @@
-package world.getmeow;
+package world.getmeow.utils;
+
+import world.getmeow.netty.Meow;
 
 import java.nio.charset.StandardCharsets;
 
@@ -6,7 +8,7 @@ import java.nio.charset.StandardCharsets;
  * This class contains some Templates and Examples for Meow.
  */
 public class Templates {
-    public static Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<>() {
+    public static DataSerializer<String> stringSerializer = new DataSerializer<>() {
         @Override
         public byte[] serialize(String data) {
             return data.getBytes(StandardCharsets.US_ASCII);
