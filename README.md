@@ -15,7 +15,7 @@
 # Socket Example
 ```java
 //Creating a DataSerializer to Serialize outgoing and incoming messages.
-Meow.DataSerializer<String> stringSerializer = new Meow.DataSerializer<>() {
+DataSerializer<String> stringSerializer = new DataSerializer<>() {
     @Override
     public byte[] serialize(String data) {
         return data.getBytes(StandardCharsets.US_ASCII);
