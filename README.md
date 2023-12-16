@@ -69,6 +69,10 @@ MeowHttp meowHttp = new MeowHttp(8090); //port 8090
 ```
 For more Examples or Documentation go visit the Wiki: https://github.com/WorldOfMeow/meow/wiki
 
+# NOTE:
+## The Repository server is currently Offline please download the JAR manually while we work on a fix:
+### https://github.com/WorldOfMeow/meow/releases/download/1.0.4/meow-1.0.4.jar
+
 # Installation
 ### Maven
 ```xml
